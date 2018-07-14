@@ -66,7 +66,7 @@ logits = tf.layers.dense(layer3, 10, activation=tf.sigmoid)  # 逻辑回归
 # loss input 就是 logits， 返回一个数，表示mean loss
 loss = tf.losses.sparse_softmax_cross_entropy(labels=Y_ph, logits=logits)
 # optimizer 是优化器， 对loss求梯度
-optimizer = tf.train.AdamOptimizer(learning_rate=0.0001)
+optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
 
 # train_op 返回改变参数的操作， 被sess.run的时候，参数会改变
 train_op = optimizer.minimize(loss)
@@ -75,8 +75,9 @@ sess.run(tf.global_variables_initializer())  # 初始化所有的kernel参数，
 
 for ind in range(100):
     loss_value, _ = sess.run(
-        [loss, train_op], feed_dict={
-            X_ph: X[0:64, :, :, :],
-            Y_ph: Y[0:64]
+        [loss, train_op],
+        feed_dict={
+            X_ph: X[64 * ind:64 * (ind + 1), :, :, :],
+            Y_ph: Y[64 * ind:64 * (ind + 1)]
         })
     print(loss_value)
